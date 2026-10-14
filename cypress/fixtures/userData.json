@@ -1,0 +1,9 @@
+{
+    "nome": "Usuario",
+    "sobreNome": "de Teste",
+    "sexo": "M",
+    "comida": ["carne", "frango", "pizza"],
+    "escolaridade": "Mestrado",
+    "esportes": "Corrida"
+}
+
