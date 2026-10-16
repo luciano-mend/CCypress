@@ -13,6 +13,7 @@ Projeto de automação de testes end-to-end (E2E) desenvolvido com Cypress e Jav
 - **Controle do tempo:** uso de `cy.clock()` e `cy.tick()` para validar comportamentos dependentes do relógio sem aguardar o tempo real.
 - **Comandos reutilizáveis:** comandos customizados para executar fluxos de cadastro e validar alertas.
 - **Asserções:** validações de textos, valores, propriedades, tipos, arrays e objetos com Chai.
+- **Fluxos financeiros:** autenticação, criação e edição de contas, lançamento e exclusão de movimentações, consulta de extrato e validação de saldo.
 
 ## Tecnologias
 
@@ -28,16 +29,30 @@ Os cenários usam páginas públicas de demonstração com componentes variados:
 
 - [Página de componentes](https://wcaquino.me/cypress/componentes.html)
 - [Página auxiliar de frame](https://wcaquino.me/cypress/frame.html)
+- [Barriga React](https://barrigareact.wcaquino.me)
 
 Como a suíte depende dessas páginas externas, a execução requer conexão com a internet e pode ser afetada por mudanças ou indisponibilidade do site.
+
+## Cenários da aplicação financeira
+
+Os testes em `cypress/e2e/barriga/funcional.spec.cy.js` simulam operações essenciais de uma aplicação de controle financeiro:
+
+- login e redefinição dos dados da aplicação antes de cada cenário;
+- inclusão, edição e validação de duplicidade de contas;
+- inclusão de receitas e validação no extrato;
+- alteração de status de movimentação e atualização do saldo;
+- exclusão de movimentações.
+
+Os fluxos usam comandos customizados separados por domínio (`Conta`, `Movimentação`, `Extrato` e `Home`) e um arquivo de localizadores centralizado em `cypress/support/locators.js`.
 
 ## Estrutura
 
 ```text
 cypress/
 ├── e2e/          # Cenários E2E organizados por recurso
+│   └── barriga/   # Fluxos funcionais da aplicação financeira
 ├── fixtures/     # Dados de teste, incluindo userData.json
-└── support/      # Comandos customizados e configuração de suporte
+└── support/      # Comandos, localizadores e configuração de suporte
 cypress.config.js
 package.json
 ```
@@ -66,7 +81,7 @@ npx cypress run
 
 ## Organização dos cenários
 
-Os testes estão em `cypress/e2e/`, separados por tema: `alert`, `asserts`, `elementos`, `esperar`, `fixture`, `dinamic`, `helpers`, `locators`, `iframe`, `popup` e `time`. Dados reutilizados pelos testes ficam em `cypress/fixtures/`; comandos customizados e configurações compartilhadas ficam em `cypress/support/`.
+Os testes estão em `cypress/e2e/`, separados por tema: `alert`, `asserts`, `elementos`, `esperar`, `fixture`, `dinamic`, `helpers`, `locators`, `iframe`, `popup`, `time` e `barriga`. Dados reutilizados pelos testes ficam em `cypress/fixtures/`; comandos customizados, localizadores e configurações compartilhadas ficam em `cypress/support/`.
 
 ## Autor
 

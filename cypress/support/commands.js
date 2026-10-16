@@ -24,12 +24,7 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
-Cypress.Commands.add('login', (usuario, senha) => {
-    cy.visit('https://www.wcaquino.me/cypress/componentes.html')
-    cy.get('#formNome').type(usuario)
-    cy.get('#formSenha').type(senha, { log: false })
-    cy.get('#formCadastrar').click()
-})
+import loc from './locators'
 
 Cypress.Commands.add('clickAlert', (locator, mensagem) => {
     cy.get(locator).click();
@@ -37,4 +32,20 @@ Cypress.Commands.add('clickAlert', (locator, mensagem) => {
     cy.on('window:alert', msg => {
         expect(msg).to.be.equal(mensagem);
     })
+})
+
+Cypress.Commands.add('login', (usuario, senha) => {
+    cy.visit('https://barrigareact.wcaquino.me')
+    cy.get(loc.LOGIN.USER).type(usuario)
+    cy.get(loc.LOGIN.PASSWORD).type(senha, { log: false })
+    cy.get(loc.LOGIN.BTN_LOGIN).click()
+    cy.get(loc.MENSAGEM).should('contain', 'Bem vindo, ')
+    cy.get('.toast-info > .toast-close-button').click()
+})
+
+Cypress.Commands.add('resetApp', () => {
+    cy.get(loc.MENU.SETTINGS).click()
+    cy.get(loc.MENU.RESET).click()
+    cy.get(loc.MENSAGEM).should('contain', 'Dados resetados')
+    cy.get(loc.BTN_FECHAR_MENSAGEM_SUCESSO).click()
 })
