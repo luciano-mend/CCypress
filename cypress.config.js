@@ -9,6 +9,7 @@ module.exports = defineConfig({
   //defaultCommandTimeout: 1000,
 
   e2e: {
+    baseUrl: 'https://barrigarest.wcaquino.me',
     setupNodeEvents(on, config) {
       // implement node event listeners here
     },
