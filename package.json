@@ -12,5 +12,8 @@
   "dependencies": {
     "cypress": "^15.21.1",
     "cypress-xpath": "^2.0.1"
+  },
+  "devDependencies": {
+    "dayjs": "^1.11.23"
   }
 }

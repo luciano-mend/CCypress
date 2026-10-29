@@ -1,6 +1,6 @@
-# Automação de Testes E2E com Cypress
+# Automação de Testes com Cypress
 
-Projeto de automação de testes end-to-end (E2E) desenvolvido com Cypress e JavaScript. A suíte valida interações e comportamentos de uma aplicação web de demonstração, incluindo formulários, elementos da interface e recursos do navegador.
+Projeto de automação de testes end-to-end (E2E) e de API, desenvolvido com Cypress e JavaScript. A suíte valida interações com uma aplicação web de demonstração e operações da API da aplicação financeira Barriga.
 
 ## Funcionalidades cobertas
 
@@ -11,8 +11,10 @@ Projeto de automação de testes end-to-end (E2E) desenvolvido com Cypress e Jav
 - **Seletores:** localização de elementos com CSS, jQuery e XPath.
 - **Iframes e popups:** interação com conteúdo em frames, validação de links de destino e simulação de abertura de novas janelas.
 - **Controle do tempo:** uso de `cy.clock()` e `cy.tick()` para validar comportamentos dependentes do relógio sem aguardar o tempo real.
-- **Comandos reutilizáveis:** comandos customizados para executar fluxos de cadastro e validar alertas.
+- **Comandos reutilizáveis:** comandos customizados para fluxos da interface e chamadas à API.
 - **Asserções:** validações de textos, valores, propriedades, tipos, arrays e objetos com Chai.
+- **Testes de API:** autenticação, gerenciamento de contas e movimentações, validação de duplicidade e consulta de saldo.
+- **Fluxos financeiros pela interface:** autenticação, criação e edição de contas, lançamento e exclusão de movimentações, consulta de extrato e validação de saldo.
 
 ## Tecnologias
 
@@ -21,23 +23,55 @@ Projeto de automação de testes end-to-end (E2E) desenvolvido com Cypress e Jav
 - Cypress 15
 - cypress-xpath
 - Chai (integrado ao Cypress)
+- dayjs
 
-## Aplicação sob teste
+## Aplicações sob teste
 
-Os cenários usam páginas públicas de demonstração com componentes variados:
+Os cenários usam páginas públicas de demonstração com componentes variados e a API da aplicação Barriga:
 
 - [Página de componentes](https://wcaquino.me/cypress/componentes.html)
 - [Página auxiliar de frame](https://wcaquino.me/cypress/frame.html)
+- [Barriga React](https://barrigareact.wcaquino.me)
+- API Barriga: `https://barrigarest.wcaquino.me`
 
-Como a suíte depende dessas páginas externas, a execução requer conexão com a internet e pode ser afetada por mudanças ou indisponibilidade do site.
+Como a suíte depende desses serviços externos, a execução requer conexão com a internet e pode ser afetada por mudanças ou indisponibilidade das aplicações.
+
+## Testes da API Barriga
+
+Os testes de API estão em `cypress/e2e/barriga/backend.spec.cy.js`. Eles usam comandos reutilizáveis definidos em `cypress/support/commands.js` para obter um token de autenticação, restaurar os dados antes de cada cenário e consultar contas, movimentações e saldos.
+
+Os cenários cobrem:
+
+- inclusão e alteração de contas;
+- rejeição de conta com nome duplicado;
+- inclusão e exclusão de movimentações;
+- consulta e atualização do saldo de uma conta.
+
+As credenciais usadas atualmente estão definidas no próprio arquivo de teste. Para executar os cenários, a API Barriga precisa estar acessível e a conta de teste deve aceitar essas credenciais.
+
+## Cenários funcionais da aplicação financeira
+
+Os testes de interface em `cypress/e2e/barriga/funcional.spec.cy.js` simulam operações essenciais da aplicação financeira:
+
+- login e redefinição dos dados da aplicação antes de cada cenário;
+- inclusão, edição e validação de duplicidade de contas;
+- inclusão de receitas e validação no extrato;
+- alteração de status de movimentação e atualização do saldo;
+- exclusão de movimentações.
+
+Os fluxos usam comandos customizados separados por domínio (`Conta`, `Movimentação`, `Extrato` e `Home`) e localizadores centralizados em `cypress/support/locators.js`.
 
 ## Estrutura
 
 ```text
 cypress/
-├── e2e/          # Cenários E2E organizados por recurso
-├── fixtures/     # Dados de teste, incluindo userData.json
-└── support/      # Comandos customizados e configuração de suporte
+├── e2e/
+│   ├── barriga/
+│   │   ├── backend.spec.cy.js    # Testes da API Barriga
+│   │   └── funcional.spec.cy.js  # Testes funcionais pela interface
+│   └── ...                       # Outros cenários E2E
+├── fixtures/                     # Dados de teste
+└── support/                       # Comandos, localizadores e configuração
 cypress.config.js
 package.json
 ```
@@ -58,15 +92,21 @@ Abra o Cypress em modo interativo:
 npx cypress open
 ```
 
-Execute a suíte em modo headless:
+Execute todos os testes em modo headless:
 
 ```bash
 npx cypress run
 ```
 
+Execute somente os testes de API:
+
+```bash
+npx cypress run --spec "cypress/e2e/barriga/backend.spec.cy.js"
+```
+
 ## Organização dos cenários
 
-Os testes estão em `cypress/e2e/`, separados por tema: `alert`, `asserts`, `elementos`, `esperar`, `fixture`, `dinamic`, `helpers`, `locators`, `iframe`, `popup` e `time`. Dados reutilizados pelos testes ficam em `cypress/fixtures/`; comandos customizados e configurações compartilhadas ficam em `cypress/support/`.
+Os testes ficam em `cypress/e2e/`, organizados por tema, incluindo `alert`, `asserts`, `elementos`, `esperar`, `fixture`, `dinamic`, `helpers`, `locators`, `iframe`, `popup`, `time` e `barriga`. Dados reutilizados ficam em `cypress/fixtures/`; comandos customizados, localizadores e configurações compartilhadas ficam em `cypress/support/`.
 
 ## Autor
 
